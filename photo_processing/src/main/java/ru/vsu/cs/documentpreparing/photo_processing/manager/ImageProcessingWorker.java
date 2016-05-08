@@ -5,18 +5,38 @@
  */
 package ru.vsu.cs.documentpreparing.photo_processing.manager;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author aleksandr
  */
 public class ImageProcessingWorker {
     
+    private final Logger log = Logger
+            .getLogger(getClass().getCanonicalName());
+    
+    private static long nextId = 0;
+    
     public enum Status {
         WORKING,
         WAITING
     }
     
-    private Status status;
+    private long id;
+    
+    private Status status = Status.WAITING;
+    
+    private ImageProcessingTask task;
+    
+    public long getId(){
+        return id;
+    }
+    
+    protected void setId(long newId){
+        this.id = newId;
+    }
     
     public Status getStatus(){
         return status;
@@ -24,6 +44,48 @@ public class ImageProcessingWorker {
     
     protected void setStatus(Status newStatus){
         this.status = newStatus;
+    }
+    
+    protected ImageProcessingTask getTask(){
+        return task;
+    }
+    
+    protected void setTask(ImageProcessingTask newTask){
+        this.task = newTask;
+    }
+    
+    public synchronized void bindTask(ImageProcessingTask newTask){
+        if (Status.WORKING.equals(this.getStatus())){
+            throw new WorkerAlreadyBindedException();
+        }
+        this.setStatus(Status.WORKING);
+        this.setTask(newTask);
+        log.info(String.format("Worker %d binded to task %d",
+                this.getId(), this.getTask().getId()));
+    }
+    
+    public void processTask(){
+        log.info(String.format("Worker %d start task %d",
+                this.getId(), this.getTask().getId()));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            log.log(Level.SEVERE, null, ex);
+        }
+        log.info(String.format("Worker %d finish task %d",
+                this.getId(), this.getTask().getId()));
+        //Task finished
+        this.setStatus(Status.WAITING);
+    }
+    
+    public ImageProcessingWorker(){
+        this.id = nextId++;
+    }
+    
+    public class WorkerAlreadyBindedException extends RuntimeException{
+        public WorkerAlreadyBindedException(){
+            super(String.format("Worker # %d is already working", getId()));
+        }
     }
     
 }

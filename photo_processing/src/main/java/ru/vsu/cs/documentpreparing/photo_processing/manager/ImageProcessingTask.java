@@ -10,5 +10,18 @@ package ru.vsu.cs.documentpreparing.photo_processing.manager;
  * @author aleksandr
  */
 public class ImageProcessingTask {
+    /**
+     * Common id sequence
+     */
+    private static long nextId = 0;
     
+    private long id;
+    
+    public long getId(){
+        return id;
+    }
+    
+    public ImageProcessingTask(){
+        this.id = nextId++;
+    }
 }

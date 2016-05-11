@@ -67,11 +67,7 @@ public class ImageProcessingWorker {
     public void processTask(){
         log.info(String.format("Worker %d start task %d",
                 this.getId(), this.getTask().getId()));
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            log.log(Level.SEVERE, null, ex);
-        }
+        this.getTask().taskAction();
         log.info(String.format("Worker %d finish task %d",
                 this.getId(), this.getTask().getId()));
         //Task finished

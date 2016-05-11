@@ -22,6 +22,9 @@ public class ImageProcessingManager {
     
     private final Logger log = Logger
             .getLogger(this.getClass().getCanonicalName());
+    /**
+     * 
+     */
     
     /**
      * Worker count.
@@ -36,7 +39,7 @@ public class ImageProcessingManager {
     /**
      * Default worker count.
      */
-    private static final int DEFAULT_WORKER_COUNT = 1;
+    private static final int DEFAULT_WORKER_COUNT = 4;
     /**
      * Default maximum task count
      */
@@ -56,7 +59,8 @@ public class ImageProcessingManager {
      * @param newTask 
      */
     public void addTask(ImageProcessingTask newTask){
-        if (tasksQueue.size() >= maxTaskCount) {
+        if (maxTaskCount != -1 &&
+                tasksQueue.size() >= maxTaskCount) {
             throw new TaskQueueOverflowException();
         }
         log.fine("New task added");
@@ -116,10 +120,11 @@ public class ImageProcessingManager {
     }
     
     public ImageProcessingManager(){
-        this(DEFAULT_WORKER_COUNT, DEFAULT_MAX_TASK_COUNT);
+        this(DEFAULT_WORKER_COUNT, DEFAULT_MAX_TASK_COUNT, true);
     }
     
-    public ImageProcessingManager(int workerCount, int maxTaskCount){
+    public ImageProcessingManager(int workerCount, int maxTaskCount,
+            boolean async){
         this.workerCount = workerCount;
         workersList = new ArrayList<>(this.workerCount);
         //Fill up workers

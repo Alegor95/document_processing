@@ -7,17 +7,18 @@ package ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.fi
 
 import org.opencv.core.Mat;
 
-
 /**
  *
  * @author aleksandr
  */
-public abstract class ImageFilter {
+public class AddGaussianNoiseFilter extends ImageFilter{
+
+    @Override
+    public Mat filterImage(Mat image) {
+        /*IplImage gaussianImage = IplImage.create(image.width(), image.height(),
+                image.depth(), image.nChannels());
+        Mat gaussianNoise = new Mat();*/
+        return image;
+    }
     
-    /**
-     * Filter image
-     * @param image {@link IplImage}
-     * @return {@link IplImage} 
-     */
-    public abstract Mat filterImage(Mat image);
 }

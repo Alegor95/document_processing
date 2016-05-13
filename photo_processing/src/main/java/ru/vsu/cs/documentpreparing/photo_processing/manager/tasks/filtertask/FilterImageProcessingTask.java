@@ -7,7 +7,7 @@ package ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask;
 
 import java.util.Iterator;
 import java.util.List;
-import org.bytedeco.javacpp.opencv_core.IplImage;
+import org.opencv.core.Mat;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.ImageProcessingTask;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.ImageFilter;
 
@@ -46,7 +46,7 @@ public class FilterImageProcessingTask extends ImageProcessingTask {
         return progress;
     }
     
-    public FilterImageProcessingTask(IplImage img, List<ImageFilter> filters){
+    public FilterImageProcessingTask(Mat img, List<ImageFilter> filters){
         this.initialImage = img;
         this.image = img.clone();
         this.filters = filters;

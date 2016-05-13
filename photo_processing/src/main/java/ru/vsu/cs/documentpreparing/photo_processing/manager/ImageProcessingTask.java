@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
-import org.bytedeco.javacpp.opencv_core.*;
+import org.opencv.core.Mat;
 
 /**
  *
@@ -54,7 +54,7 @@ public abstract class ImageProcessingTask {
     /**
      * Initial and processed image
      */
-    protected IplImage initialImage, image;
+    protected Mat initialImage, image;
     /**
      * Add listener on task finish
      * @param listener 
@@ -83,7 +83,7 @@ public abstract class ImageProcessingTask {
      * Get initial image
      * @return {@link IplImage}
      */
-    public IplImage getInitialImage(){
+    public Mat getInitialImage(){
         return initialImage;
     }
     
@@ -91,7 +91,7 @@ public abstract class ImageProcessingTask {
      * Get processed image
      * @return {@link IplImage}
      */
-    public IplImage getImage(){
+    public Mat getImage(){
         return image;
     }
     

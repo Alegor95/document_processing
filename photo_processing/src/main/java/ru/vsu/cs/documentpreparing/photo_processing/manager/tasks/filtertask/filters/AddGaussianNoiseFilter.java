@@ -5,7 +5,9 @@
  */
 package ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters;
 
+import static org.opencv.core.Core.*;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 
 /**
  *
@@ -13,12 +15,20 @@ import org.opencv.core.Mat;
  */
 public class AddGaussianNoiseFilter extends ImageFilter{
 
+    private final double mean, deviation;
+    
     @Override
     public Mat filterImage(Mat image) {
-        /*IplImage gaussianImage = IplImage.create(image.width(), image.height(),
-                image.depth(), image.nChannels());
-        Mat gaussianNoise = new Mat();*/
-        return image;
+        Mat gaussianNoise = new Mat(image.rows(), image.cols(), image.type());
+        randn(gaussianNoise, mean, deviation);
+        add(gaussianNoise, new Scalar(-deviation/2), gaussianNoise);
+        Mat result = new Mat();
+        add(image, gaussianNoise, result);
+        return result;
     }
     
+    public AddGaussianNoiseFilter(double mean, double deviation){
+        this.mean = mean;
+        this.deviation = deviation;
+    }
 }

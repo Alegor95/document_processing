@@ -40,7 +40,7 @@ public class Main {
         manager = new ImageProcessingManager();
         //Generate filters list
         List<ImageFilter> filtersList = new LinkedList<>();
-        filtersList.add(new RotareFilter(-90));
+        filtersList.add(new AddGaussianNoiseFilter(128, 128));
         //Tasks list
         List<ImageProcessingTask> tasksList = new LinkedList<>();
         //Process files

@@ -11,9 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import java.util.Queue;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.opencv.core.Core;
 
 /**
  *
@@ -91,23 +89,26 @@ public class ImageProcessingManager {
      * Set task to worker.
      * Method is synchronized to avoid race condition
      */
-    protected synchronized void assignmentTask(){
+    protected void assignmentTask(){
         log.fine("Start task assigment");
-        //Looking for worker
-        final ImageProcessingWorker currentWorker = getFreeWorker();
-        if (currentWorker == null){
-            log.fine("No free workers");
-            return;
-        }
-        //Looking for task
+        final ImageProcessingWorker currentWorker;        
         final ImageProcessingTask currentTask;
-        if (tasksQueue.isEmpty()){
-            log.fine("Task queue empty");
-            return; //No work - no assignments
+        //Looking for worker
+        synchronized (this) {
+            currentWorker = getFreeWorker();
+            if (currentWorker == null){
+                log.fine("No free workers");
+                return;
+            }
+            //Looking for task
+            if (tasksQueue.isEmpty()){
+                log.fine("Task queue empty");
+                return; //No work - no assignments
+            }
+            currentTask = tasksQueue.poll();
+            //Process task in seprate thread
+            currentWorker.bindTask(currentTask);
         }
-        currentTask = tasksQueue.poll();
-        //Process task in seprate thread
-        currentWorker.bindTask(currentTask);
         Thread workerThread = new Thread(){            
             @Override
             public void run(){
@@ -121,11 +122,10 @@ public class ImageProcessingManager {
     }
     
     public ImageProcessingManager(){
-        this(DEFAULT_WORKER_COUNT, DEFAULT_MAX_TASK_COUNT, true);
+        this(DEFAULT_WORKER_COUNT, DEFAULT_MAX_TASK_COUNT);
     }
     
-    public ImageProcessingManager(int workerCount, int maxTaskCount,
-            boolean async){
+    public ImageProcessingManager(int workerCount, int maxTaskCount){
         this.workerCount = workerCount;
         workersList = new ArrayList<>(this.workerCount);
         //Fill up workers

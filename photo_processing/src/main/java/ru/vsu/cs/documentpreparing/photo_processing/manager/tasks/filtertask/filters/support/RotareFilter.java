@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters;
+package ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.support;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.RotatedRect;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.ImageFilter;
 import static org.opencv.imgproc.Imgproc.*;
 
 

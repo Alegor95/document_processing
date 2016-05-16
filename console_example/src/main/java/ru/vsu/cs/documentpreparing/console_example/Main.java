@@ -12,14 +12,20 @@ import java.util.LinkedList;
 import java.util.List;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
+import static org.opencv.imgcodecs.Imgcodecs.imread;
+import static org.opencv.imgcodecs.Imgcodecs.imwrite;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.ImageProcessingManager; 
 import ru.vsu.cs.documentpreparing.photo_processing.manager.ImageProcessingTask;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.FilterImageProcessingTask;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.*;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.light.CLAHEFilter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.noise.BilateralNoiseFilter;
-import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.noise.MedianNoiseFilter;
-import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.support.RotareFilter;
+import static org.opencv.imgcodecs.Imgcodecs.imread;
+import static org.opencv.imgcodecs.Imgcodecs.imwrite;
+import static org.opencv.imgcodecs.Imgcodecs.imread;
+import static org.opencv.imgcodecs.Imgcodecs.imwrite;
+import static org.opencv.imgcodecs.Imgcodecs.imread;
+import static org.opencv.imgcodecs.Imgcodecs.imwrite;
 
 /**
  *
@@ -43,13 +49,17 @@ public class Main {
         manager = new ImageProcessingManager(4, -1);
         //Generate filters list
         List<ImageFilter> filtersList = new LinkedList<>();
-        filtersList.add(new RotareFilter(-90));
+        //Noise filtering
+        filtersList.add(new BilateralNoiseFilter(7, 196, 7));
+        //Histogram filtering
+        filtersList.add(new CLAHEFilter(3, 16));
         //Tasks list
         List<ImageProcessingTask> tasksList = new LinkedList<>();
-        //Process files
+        //Process filesизо
         File inputDir = Paths.get(HOME_URI, INPUT_URI).toFile();
         for (File file:inputDir.listFiles()){            
-            Mat image = Highgui.imread(file.getAbsolutePath());
+            Mat image = imread(file.getAbsolutePath());
+            
             //Generate task
             FilterImageProcessingTask task = 
                     new FilterImageProcessingTask(image, filtersList);
@@ -59,7 +69,7 @@ public class Main {
                 Object source = e.getSource();
                 if (source instanceof ImageProcessingTask) {
                     ImageProcessingTask task1 = (ImageProcessingTask)source;
-                    Highgui.imwrite(HOME_URI+OUTPUT_URI+file.getName(), task1.getImage());
+                    imwrite(HOME_URI+OUTPUT_URI+file.getName(), task1.getImage());
                 }
             });
             tasksList.add(task);

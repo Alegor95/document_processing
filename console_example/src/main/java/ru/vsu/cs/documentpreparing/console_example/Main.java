@@ -17,6 +17,9 @@ import ru.vsu.cs.documentpreparing.photo_processing.manager.ImageProcessingManag
 import ru.vsu.cs.documentpreparing.photo_processing.manager.ImageProcessingTask;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.FilterImageProcessingTask;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.*;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.noise.BilateralNoiseFilter;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.noise.MedianNoiseFilter;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.support.RotareFilter;
 
 /**
  *
@@ -37,10 +40,10 @@ public class Main {
      */
     public static void main(String[] args){
         //
-        manager = new ImageProcessingManager();
+        manager = new ImageProcessingManager(4, -1);
         //Generate filters list
         List<ImageFilter> filtersList = new LinkedList<>();
-        filtersList.add(new AddGaussianNoiseFilter(128, 128));
+        filtersList.add(new RotareFilter(-90));
         //Tasks list
         List<ImageProcessingTask> tasksList = new LinkedList<>();
         //Process files

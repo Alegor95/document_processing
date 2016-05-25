@@ -55,22 +55,6 @@ public class ImageProcessingManager {
     private Queue<ImageProcessingTask> tasksQueue;
     
     /**
-     * Add task to queue
-     * @param newTask 
-     */
-    public void addTask(ImageProcessingTask newTask){
-        if (maxTaskCount != -1 &&
-                tasksQueue.size() >= maxTaskCount) {
-            throw new TaskQueueOverflowException();
-        }
-        log.fine("New task added");
-        tasksQueue.add(newTask);
-        //assigment task to workers
-        log.fine("Assign task");
-        assignmentTask();
-    }
-    
-    /**
      * Get free worker for worker's list
      * @return 
      */
@@ -89,30 +73,45 @@ public class ImageProcessingManager {
     /**
      * Set task to worker.
      * Method is synchronized to avoid race condition
+     * @param task
      */
-    protected void assignmentTask(){
+    public void assignmentTask(final ImageProcessingTask task){
         log.fine("Start task assigment");
-        final ImageProcessingWorker currentWorker;        
-        final ImageProcessingTask currentTask;
+        final ImageProcessingWorker currentWorker;
         //Looking for worker
         synchronized (this) {
             currentWorker = getFreeWorker();
             if (currentWorker == null){
                 log.fine("No free workers");
+                if (maxTaskCount != -1 &&
+                        tasksQueue.size() >= maxTaskCount) {
+                    throw new TaskQueueOverflowException();
+                }
+                this.tasksQueue.add(task);
                 return;
             }
-            //Looking for task
-            if (tasksQueue.isEmpty()){
-                log.fine("Task queue empty");
-                //If have no tasks for workers - stop free workers
-                currentWorker.stop();
-                return;
-            }
-            currentTask = tasksQueue.poll();
             //Process task in seprate thread
-            currentWorker.bindTask(currentTask);
+            currentWorker.bindTask(task);
         }        
         currentWorker.processTask();
+    }
+    
+    /**
+     * Lookup task for worker
+     * @param worker 
+     */
+    public void recieveTask(ImageProcessingWorker worker){
+        final ImageProcessingTask newTask;
+        synchronized (this){
+            if (tasksQueue.size() > 0){
+                newTask = tasksQueue.poll();
+                worker.bindTask(newTask);
+            } else {
+                //No tasks - stop worker
+                worker.stop();
+            }
+        }
+        worker.processTask();
     }
     
     public ImageProcessingManager(){
@@ -125,9 +124,6 @@ public class ImageProcessingManager {
         //Fill up workers
         for (int i = 0; i < this.workerCount; i++){
             ImageProcessingWorker newWorker = new ImageProcessingWorker(this);
-            newWorker.addFinishListener(() -> {
-                newWorker.getManager().assignmentTask();
-            });
             workersList.add(newWorker);
         }
         //Create task queue

@@ -35,11 +35,9 @@ public class ImageProcessingWorker {
     
     private ImageProcessingTask task;
     
-    private WorkerThread thread;
+    private final WorkerThread thread;
     
-    private List<Runnable> finishListeners;
-    
-    private ImageProcessingManager manager;
+    private final ImageProcessingManager manager;
     
     public long getId(){
         return id;
@@ -87,14 +85,6 @@ public class ImageProcessingWorker {
         }
     }
     
-    protected List<Runnable> getFinishListeners(){
-        return this.finishListeners;
-    }
-    
-    public void addFinishListener(Runnable listener){
-        this.getFinishListeners().add(listener);
-    }
-    
     public ImageProcessingManager getManager(){
         return this.manager;
     }
@@ -107,7 +97,6 @@ public class ImageProcessingWorker {
     public ImageProcessingWorker(ImageProcessingManager manager){
         this.id = nextId++;
         this.status = Status.WAITING;
-        this.finishListeners = new LinkedList<>();
         this.manager = manager;
         this.thread = new WorkerThread(this);
         this.thread.start();
@@ -161,9 +150,7 @@ public class ImageProcessingWorker {
                             parent.setStatus(Status.WAITING);
                             parent.setTask(null);
                             //Alert listeners
-                            for (Runnable listener:parent.getFinishListeners()){
-                                listener.run();
-                            }
+                            parent.getManager().recieveTask(parent);
                         }                    
                     } catch (InterruptedException e){
                         log.severe(String.format(

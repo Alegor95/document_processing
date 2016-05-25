@@ -53,6 +53,10 @@ public class ImageProcessingManager {
      * Queue of tasks
      */
     private Queue<ImageProcessingTask> tasksQueue;
+    /**
+     * Listeners for processing finish
+     */
+    private List<Runnable> finishListeners;
     
     /**
      * Get free worker for worker's list
@@ -68,6 +72,10 @@ public class ImageProcessingManager {
             }
         }
         return currentWorker;
+    }
+    
+    public void addFinishListener(Runnable listener){
+        this.finishListeners.add(listener);
     }
     
     /**
@@ -109,9 +117,23 @@ public class ImageProcessingManager {
             } else {
                 //No tasks - stop worker
                 worker.stop();
+                checkFinish();
             }
         }
         worker.processTask();
+    }
+    
+    private void checkFinish(){
+        for (ImageProcessingWorker worker:this.workersList){
+            if (!ImageProcessingWorker.Status.STOPPED
+                    .equals(worker.getStatus())){
+                return;
+            }
+        }
+        //All workers finished - stop manager
+        for(Runnable listener:this.finishListeners){
+            listener.run();
+        }
     }
     
     public ImageProcessingManager(){
@@ -129,6 +151,7 @@ public class ImageProcessingManager {
         //Create task queue
         this.maxTaskCount = maxTaskCount;
         tasksQueue = new LinkedList<>();
+        this.finishListeners = new LinkedList<>();
     }
     
     @PreDestroy

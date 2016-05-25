@@ -11,5 +11,6 @@
     <modules>
         <module>photo_processing</module>
         <module>console_example</module>
-    </modules>
+    <module>application_example</module>
+  </modules>
 </project>

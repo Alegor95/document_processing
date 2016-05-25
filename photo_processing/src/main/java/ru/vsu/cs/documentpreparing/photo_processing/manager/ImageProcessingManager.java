@@ -12,6 +12,7 @@ import java.util.List;
 
 import java.util.Queue;
 import java.util.logging.Logger;
+import javax.annotation.PreDestroy;
 
 /**
  *
@@ -42,7 +43,7 @@ public class ImageProcessingManager {
     /**
      * Default maximum task count
      */
-    private static final int DEFAULT_MAX_TASK_COUNT = -1;    
+    private static final int DEFAULT_MAX_TASK_COUNT = -1;
     
     /**
      * List of workers.
@@ -103,22 +104,15 @@ public class ImageProcessingManager {
             //Looking for task
             if (tasksQueue.isEmpty()){
                 log.fine("Task queue empty");
-                return; //No work - no assignments
+                //If have no tasks for workers - stop free workers
+                currentWorker.stop();
+                return;
             }
             currentTask = tasksQueue.poll();
             //Process task in seprate thread
             currentWorker.bindTask(currentTask);
-        }
-        Thread workerThread = new Thread(){            
-            @Override
-            public void run(){
-                currentWorker.processTask();
-                //Assign new task, when this will be complited                
-                assignmentTask();
-            }
-        };
-        log.fine("Successfull assignment");
-        workerThread.start();
+        }        
+        currentWorker.processTask();
     }
     
     public ImageProcessingManager(){
@@ -130,11 +124,22 @@ public class ImageProcessingManager {
         workersList = new ArrayList<>(this.workerCount);
         //Fill up workers
         for (int i = 0; i < this.workerCount; i++){
-            workersList.add(new ImageProcessingWorker());
+            ImageProcessingWorker newWorker = new ImageProcessingWorker(this);
+            newWorker.addFinishListener(() -> {
+                newWorker.getManager().assignmentTask();
+            });
+            workersList.add(newWorker);
         }
         //Create task queue
         this.maxTaskCount = maxTaskCount;
         tasksQueue = new LinkedList<>();
+    }
+    
+    @PreDestroy
+    public void destroy(){
+        for (ImageProcessingWorker worker:this.workersList) {
+            worker.destroy();
+        }
     }
     
     public class TaskQueueOverflowException extends RuntimeException {

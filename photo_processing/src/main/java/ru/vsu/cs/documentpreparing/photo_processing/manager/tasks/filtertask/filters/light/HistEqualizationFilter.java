@@ -62,6 +62,10 @@ public class HistEqualizationFilter extends ImageFilter{
         return result;
     }
     
+    public HistEqualizationFilter(Double sigma){
+        this(sigma.doubleValue());
+    }
+    
     public HistEqualizationFilter(double sigma){
         this.sigma = sigma;
     }

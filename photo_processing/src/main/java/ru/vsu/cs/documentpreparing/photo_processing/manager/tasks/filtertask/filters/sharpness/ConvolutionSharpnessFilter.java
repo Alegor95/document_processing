@@ -27,6 +27,10 @@ public class ConvolutionSharpnessFilter extends ImageFilter {
         return image;
     }
     
+    public ConvolutionSharpnessFilter(Double centralValue){
+        this(centralValue.doubleValue());
+    }
+    
     public ConvolutionSharpnessFilter( double centralValue){
         double border = (centralValue - 1)/4;
         double[][] kernelArr = new double[][]{

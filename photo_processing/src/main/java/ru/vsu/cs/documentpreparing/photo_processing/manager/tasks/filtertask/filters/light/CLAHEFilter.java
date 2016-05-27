@@ -55,6 +55,10 @@ public class CLAHEFilter extends ImageFilter {
         return image;
     }
     
+    public CLAHEFilter(Long clipSize, Long cellSize){
+        this(clipSize.longValue(), cellSize.longValue());
+    }
+    
     public CLAHEFilter(long clipSize, long cellSize){
         this.clipSize = clipSize;
         this.cellSize = new Size(cellSize, cellSize);

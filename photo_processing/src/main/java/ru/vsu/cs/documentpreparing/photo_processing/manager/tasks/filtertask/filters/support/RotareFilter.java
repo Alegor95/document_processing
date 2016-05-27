@@ -48,4 +48,8 @@ public class RotareFilter extends ImageFilter {
         this.angle = angle;
     }
     
+    public RotareFilter(Double a){
+        this(a.doubleValue());
+    }
+    
 }

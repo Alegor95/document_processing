@@ -28,6 +28,9 @@ public class UnsharpMasking extends ImageFilter {
         return image;
     }
     
+    public UnsharpMasking(Integer size, Double sigma, Double k){
+        this(size.intValue(), sigma.doubleValue(), k.doubleValue());
+    }
     
     public UnsharpMasking(int gaussianSize, double sigma, double summCoeff){
         this.maskSize = new Size(gaussianSize, gaussianSize);

@@ -26,6 +26,13 @@ public class BilateralNoiseFilter extends ImageFilter {
         return result;
     }
     
+    public BilateralNoiseFilter(Integer size,
+            Double colorDeviation, Double spaceDeviation){
+        this(size.intValue(),
+                colorDeviation.doubleValue(),
+                spaceDeviation.doubleValue());
+    }
+    
     public BilateralNoiseFilter(int size,
             double colorDeviation, double spaceDeviation){
         this.aprtureSize = size;

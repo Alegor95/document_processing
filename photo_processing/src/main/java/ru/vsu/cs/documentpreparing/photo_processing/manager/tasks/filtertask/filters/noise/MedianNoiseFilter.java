@@ -27,4 +27,7 @@ public class MedianNoiseFilter extends ImageFilter{
         this.apertureSize = size;
     }
     
+    public MedianNoiseFilter(Integer size){
+        this(size.intValue());
+    }
 }

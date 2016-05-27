@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.light;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.opencv.core.Core;
@@ -176,5 +170,9 @@ public class RetinexFilter extends ImageFilter {
     
     public RetinexFilter(int level){
         this.level = level;
+    }
+    
+    public RetinexFilter(Integer level){
+        this(level.intValue());
     }
 }

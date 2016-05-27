@@ -32,4 +32,8 @@ public class AddGaussianNoiseFilter extends ImageFilter{
         this.mean = mean;
         this.deviation = deviation;
     }
+    
+    public AddGaussianNoiseFilter(Double mean, Double dev){
+        this(mean.doubleValue(), dev.doubleValue());
+    }
 }

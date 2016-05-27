@@ -18,12 +18,11 @@ import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.Fil
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.*;
 import static org.opencv.imgcodecs.Imgcodecs.imread;
 import static org.opencv.imgcodecs.Imgcodecs.imwrite;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.detection.RegionDetectionFilter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.light.AutoRetinexFilter;
-import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.light.CLAHEFilter;
-import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.light.RetinexFilter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.noise.BilateralNoiseFilter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.sharpness.ConvolutionSharpnessFilter;
-import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.sharpness.UnsharpMasking;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.sharpness.DarkBordersFilter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.support.ThresholdResizeFilter;
 
 /**
@@ -48,20 +47,25 @@ public class Main {
     public static void main(String[] args){
         //Create manager
         manager = new ImageProcessingManager(4, -1);
+        manager.addFinishListener(() -> {
+            System.out.printf("\nManager finished\n");
+        });
         //Generate filters list
         List<ImageFilter> filtersList = new LinkedList<>();
         //Resize image, if it more than threshold
         filtersList.add(new ThresholdResizeFilter(1000));
-        //Noise filtering
-        filtersList.add(new BilateralNoiseFilter(3, 196, 3));
         //Histogram filtering
         filtersList.add(new AutoRetinexFilter());
+        //Noise filtering
+        filtersList.add(new BilateralNoiseFilter(3, 64, 0.5));
         //Increase sharpness
-        filtersList.add(new UnsharpMasking(3, 128, 3));
+        filtersList.add(new DarkBordersFilter(0.2));
         //filtersList.add(new ConvolutionSharpnessFilter(5));
+        //Cut off region
+        //filtersList.add(new RegionDetectionFilter());
         //Tasks list
         List<ImageProcessingTask> tasksList = new LinkedList<>();
-        //Process filesизо
+        //Process files
         File inputDir = Paths.get(HOME_URI, INPUT_URI).toFile();
         for (File file:inputDir.listFiles()){
             if (!file.isFile()) continue;
@@ -80,7 +84,7 @@ public class Main {
             });
             tasksList.add(task);
             //Add to manager
-            manager.addTask(task);
-        }        
+            manager.assignmentTask(task);
+        }
     }
 }

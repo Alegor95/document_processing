@@ -38,6 +38,10 @@ public class ThresholdResizeFilter extends ImageFilter {
         return image;
     }
     
+    public ThresholdResizeFilter(Integer t){
+        this(t.intValue());
+    }
+    
     public ThresholdResizeFilter(int threshold){
         this.threshold = threshold;
     }

@@ -29,4 +29,8 @@ public class GaussianNoiseFilter extends ImageFilter {
         this.apertureSize = new Size(size, size);
     }
     
+    public GaussianNoiseFilter(Integer size){
+        this(size.intValue());
+    }
+    
 }

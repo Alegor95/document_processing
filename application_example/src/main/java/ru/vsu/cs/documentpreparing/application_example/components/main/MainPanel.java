@@ -31,14 +31,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
-import ru.vsu.cs.documentpreparing.application_example.factory.ManagerFactory;
+import ru.vsu.cs.documentpreparing.application_example.manager.ManagerFactory;
 import ru.vsu.cs.documentpreparing.application_example.filters.FiltersRepository;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.ImageProcessingManager;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.ImageProcessingTask;
@@ -260,6 +259,7 @@ public class MainPanel extends HBox {
                         });
                     }
                 });
+                manager.run();
             }
             
         });

@@ -7,6 +7,7 @@ package ru.vsu.cs.documentpreparing.photo_processing.manager;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,13 +85,13 @@ public class ImageProcessingManager {
      * @param task
      */
     public void assignmentTask(final ImageProcessingTask task){
-        log.fine("Start task assigment");
+        log.fine(String.format("Start task %d assigment", task.getId()));
         final ImageProcessingWorker currentWorker;
         //Looking for worker
         synchronized (this) {
             currentWorker = getFreeWorker();
             if (currentWorker == null){
-                log.fine("No free workers");
+                log.info(String.format("Task %d was added to queue", task.getId()));
                 if (maxTaskCount != -1 &&
                         tasksQueue.size() >= maxTaskCount) {
                     throw new TaskQueueOverflowException();
@@ -100,8 +101,28 @@ public class ImageProcessingManager {
             }
             //Process task in seprate thread
             currentWorker.bindTask(task);
-        }        
-        currentWorker.processTask();
+        }
+    }
+    
+    /**
+     * Assign collection of tasks
+     * @param tasks 
+     */
+    public void assignmentTasks(Collection<? extends ImageProcessingTask> tasks){
+        for (ImageProcessingTask task:tasks){
+            this.assignmentTask(task);
+        }
+    }
+    
+    /**
+     * Run all workers
+     */
+    public void run(){
+        for (ImageProcessingWorker worker:this.workersList){
+            if (ImageProcessingWorker.Status.BINDED.equals(worker.getStatus())){
+                worker.processTask();                
+            }
+        }
     }
     
     /**

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.vsu.cs.documentpreparing.application_example.factory;
+package ru.vsu.cs.documentpreparing.application_example.manager;
 
 import ru.vsu.cs.documentpreparing.photo_processing.manager.ImageProcessingManager;
 

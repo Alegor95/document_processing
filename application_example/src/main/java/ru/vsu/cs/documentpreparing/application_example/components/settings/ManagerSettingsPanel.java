@@ -17,7 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import ru.vsu.cs.documentpreparing.application_example.factory.ManagerFactory;
+import ru.vsu.cs.documentpreparing.application_example.manager.ManagerFactory;
 
 /**
  *

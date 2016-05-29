@@ -10,27 +10,10 @@ import java.util.List;
 import static org.opencv.core.Core.merge;
 import static org.opencv.core.Core.split;
 import org.opencv.core.Mat;
-import org.opencv.imgproc.CLAHE;
-import org.opencv.imgproc.Imgproc;
 import static org.opencv.imgproc.Imgproc.COLOR_BGR2YCrCb;
 import static org.opencv.imgproc.Imgproc.COLOR_YCrCb2BGR;
-import static org.opencv.imgproc.Imgproc.cvtColor;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.ImageFilter;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
 import static org.opencv.imgproc.Imgproc.equalizeHist;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.cvtColor;
 import static org.opencv.imgproc.Imgproc.cvtColor;
 
 /**
@@ -38,12 +21,6 @@ import static org.opencv.imgproc.Imgproc.cvtColor;
  * @author aleksandr
  */
 public class HistEqualizationFilter extends ImageFilter{
-
-    private double sigma;
-    
-    private double gaussian(double x, double y, double sigma){
-        return Math.exp(-(x*x+y*y)/(2*sigma*sigma));
-    }
     
     @Override
     public Mat filterImage(Mat image) {
@@ -60,14 +37,6 @@ public class HistEqualizationFilter extends ImageFilter{
         merge(channels,ycrcb);
         cvtColor(ycrcb,result,COLOR_YCrCb2BGR);
         return result;
-    }
-    
-    public HistEqualizationFilter(Double sigma){
-        this(sigma.doubleValue());
-    }
-    
-    public HistEqualizationFilter(double sigma){
-        this.sigma = sigma;
     }
     
 }

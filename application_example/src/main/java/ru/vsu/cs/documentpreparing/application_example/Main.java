@@ -22,9 +22,15 @@ import ru.vsu.cs.documentpreparing.application_example.filters.FiltersRepository
 import ru.vsu.cs.documentpreparing.application_example.filters.factory.FilterFactory;
 import ru.vsu.cs.documentpreparing.application_example.filters.factory.Parameter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.ImageFilter;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.light.AutoRetinexFilter;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.light.CLAHEFilter;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.light.HistEqualizationFilter;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.light.RetinexFilter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.noise.BilateralNoiseFilter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.noise.GaussianNoiseFilter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.noise.MedianNoiseFilter;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.sharpness.ConvolutionSharpnessFilter;
+import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.sharpness.UnsharpMasking;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.support.AddGaussianNoiseFilter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.support.ThresholdResizeFilter;
 
@@ -134,6 +140,73 @@ public class Main extends Application {
                     parameters
             );        
             rep.getFactories().add(bilateralFilterFactory);
+        }
+        //Light
+        {
+            Parameter[] parameters = {};
+            FilterFactory<HistEqualizationFilter> histEqualizationFilterFactory = new FilterFactory<>(
+                    "Выравнивание гистограммы",
+                    HistEqualizationFilter.class,
+                    parameters
+            );
+            rep.getFactories().add(histEqualizationFilterFactory);
+        }
+        {
+            Parameter[] parameters = {
+                new Parameter<Long>("Размер маски", (long)3),
+                new Parameter<Long>("Размер клипа", (long)3)
+            };
+            FilterFactory<CLAHEFilter> CLAHEFilterFactory = new FilterFactory<>(
+                    "CLAHE фильтр",
+                    CLAHEFilter.class,
+                    parameters
+            );
+            rep.getFactories().add(CLAHEFilterFactory);
+        }
+        {
+            Parameter[] parameters = {
+                new Parameter<Integer>("Порог фильтрации", 3)
+            };
+            FilterFactory<RetinexFilter> RetinexFilterFactory = new FilterFactory<>(
+                    "Retinex фильтр",
+                    RetinexFilter.class,
+                    parameters
+            );
+            rep.getFactories().add(RetinexFilterFactory);
+        }
+        {
+            Parameter[] parameters = {};
+            FilterFactory<AutoRetinexFilter> AutoRetinexFactory = new FilterFactory<>(
+                    "AutoRetinex фильтр",
+                    AutoRetinexFilter.class,
+                    parameters
+            );
+            rep.getFactories().add(AutoRetinexFactory);
+        }
+        //Sharpness
+        {
+            Parameter[] parameters = {
+                new Parameter<Double>("Степень увеличения", 9.)
+            };
+            FilterFactory<ConvolutionSharpnessFilter> convSharpnessFactory = new FilterFactory<>(
+                    "Увеличение резкости",
+                    ConvolutionSharpnessFilter.class,
+                    parameters
+            );
+            rep.getFactories().add(convSharpnessFactory);
+        }
+        {
+            Parameter[] parameters = {
+                new Parameter<Integer>("Размер маски", 3),
+                new Parameter<Double>("Степень размытия", 0.),
+                new Parameter<Double>("Коэфф. суммирования", 0.)
+            };
+            FilterFactory<UnsharpMasking> unsharpMaskingFactory = new FilterFactory<>(
+                    "Unsharp Masking",
+                    UnsharpMasking.class,
+                    parameters
+            );
+            rep.getFactories().add(unsharpMaskingFactory);
         }
         //
         List<? extends ImageFilter> filters = rep.getFilters();

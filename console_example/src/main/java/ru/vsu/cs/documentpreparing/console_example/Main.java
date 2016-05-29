@@ -24,6 +24,8 @@ import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.fil
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.sharpness.ConvolutionSharpnessFilter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.sharpness.DarkBordersFilter;
 import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.filters.support.ThresholdResizeFilter;
+import static org.opencv.imgcodecs.Imgcodecs.imread;
+import static org.opencv.imgcodecs.Imgcodecs.imwrite;
 
 /**
  *
@@ -55,11 +57,11 @@ public class Main {
         //Resize image, if it more than threshold
         filtersList.add(new ThresholdResizeFilter(1000));
         //Histogram filtering
-        filtersList.add(new AutoRetinexFilter());
+        //filtersList.add(new AutoRetinexFilter());
         //Noise filtering
-        filtersList.add(new BilateralNoiseFilter(3, 64, 0.5));
+        //filtersList.add(new BilateralNoiseFilter(3, 64, 0.5));
         //Increase sharpness
-        filtersList.add(new DarkBordersFilter(0.2));
+        //filtersList.add(new DarkBordersFilter(0.2));
         //filtersList.add(new ConvolutionSharpnessFilter(5));
         //Cut off region
         //filtersList.add(new RegionDetectionFilter());
@@ -83,8 +85,9 @@ public class Main {
                 }
             });
             tasksList.add(task);
-            //Add to manager
-            manager.assignmentTask(task);
         }
+        //Add to manager
+        manager.assignmentTasks(tasksList);
+        manager.run();
     }
 }

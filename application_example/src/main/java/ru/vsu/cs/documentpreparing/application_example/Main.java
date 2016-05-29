@@ -14,6 +14,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.opencv.core.Core;
 import ru.vsu.cs.documentpreparing.application_example.components.main.MainPanel;
 import ru.vsu.cs.documentpreparing.application_example.components.settings.FilterSettingsPanel;
 import ru.vsu.cs.documentpreparing.application_example.components.settings.ManagerSettingsPanel;
@@ -32,6 +33,8 @@ import ru.vsu.cs.documentpreparing.photo_processing.manager.tasks.filtertask.fil
  * @author aleksandr
  */
 public class Main extends Application {
+    
+    static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
     
     @Override
     public void start(Stage primaryStage) {

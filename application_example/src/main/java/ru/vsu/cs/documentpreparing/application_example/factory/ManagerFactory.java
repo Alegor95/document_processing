@@ -75,7 +75,7 @@ public class ManagerFactory {
     }
     
     private ManagerFactory(){
-        this.defaultWorkerCount = 1;
-        this.defaultMaxTaskCount = 1;
+        this.defaultWorkerCount = 4;
+        this.defaultMaxTaskCount = -1;
     }
 }

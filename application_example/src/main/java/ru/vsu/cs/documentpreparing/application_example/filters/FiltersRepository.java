@@ -54,7 +54,16 @@ public class FiltersRepository {
         return this.getFilters(factories);
     }
     
-    public List<ImageFilter> getFilters(Collection<FilterFactory> factList){        
+    public List<ImageFilter> getActiveFilters(){
+        return this.getFilters(this.activeFactories);
+    }
+    
+    /**
+     * Get filters list created by received factories list
+     * @param factList
+     * @return 
+     */
+    protected List<ImageFilter> getFilters(Collection<FilterFactory> factList){        
         List filters = new LinkedList<>();
         for (FilterFactory factory : factList){
             filters.add(factory.createFilter());
@@ -64,6 +73,8 @@ public class FiltersRepository {
 
     private FiltersRepository(){
         this.factories = FXCollections
+                .observableList(new LinkedList<FilterFactory>());
+        this.activeFactories = FXCollections
                 .observableList(new LinkedList<FilterFactory>());
     }
      
